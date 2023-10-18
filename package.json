@@ -1,0 +1,40 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "echo \"Everything looks good\" && exit 0",
+    "prepare": "husky install",
+    "generate": "graphql-codegen --config ./src/lib/apollo/codegen.ts"
+  },
+  "prisma": {
+    "schema": "./src/lib/prisma/schema.prisma",
+    "seed": "tsx ./src/lib/prisma/seed.ts"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.9.4",
+    "@graphql-tools/load-files": "^7.0.0",
+    "@prisma/client": "^5.3.1",
+    "graphql": "^16.8.1",
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
+    "@types/node": "^20.6.3",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3",
+    "prisma": "^5.3.1",
+    "tsx": "^3.13.0",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  }
+}

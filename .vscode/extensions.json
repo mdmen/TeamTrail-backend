@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "prisma.prisma",
+    "ms-azuretools.vscode-docker",
+    "graphql.vscode-graphql",
+    "graphql.vscode-graphql-syntax"
+  ]
+}
