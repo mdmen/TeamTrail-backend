@@ -2,7 +2,7 @@
 
 [![GNU General Public License v3.0](https://img.shields.io/badge/GNU_GPLv3-License-blue.svg?style=flat-square)](./LICENSE)
 
-#### Backend for [TeamTrail](https://github.com/mdmen/TeamTrail)
+**Backend for [TeamTrail](https://github.com/mdmen/TeamTrail)**
 
 ## Installation
 
@@ -20,6 +20,8 @@
 [apollo-badge]: https://img.shields.io/badge/-ApolloGraphQL-311C87?style=for-the-badge&logo=apollo-graphql
 [vscode-badge]: https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white
 [docker-badge]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
+[redis-badge]: https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white
+[nginx-badge]: https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white
 
 <!--- badge links --->
 
@@ -29,10 +31,14 @@
 [apollo-link]: https://www.apollographql.com
 [vscode-link]: https://code.visualstudio.com
 [docker-link]: https://www.docker.com
+[redis-link]: https://redis.io
+[nginx-link]: https://www.nginx.com
 
 [![TypeScript][ts-badge]][ts-link]</br>
 [![MongoDB][mongo-badge]][mongo-link]</br>
 [![Prisma][prisma-badge]][prisma-link]</br>
 [![Apollo GraphQL][apollo-badge]][apollo-link]</br>
+[![Redis][redis-badge]][redis-link]</br>
+[![Nginx][nginx-badge]][nginx-link]</br>
 [![VSCode][vscode-badge]][vscode-link]</br>
 [![Docker][docker-badge]][docker-link]</br>

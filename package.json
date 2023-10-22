@@ -1,16 +1,19 @@
 {
   "private": true,
   "scripts": {
+    "dev": "tsx watch ./src/index.ts",
+    "lint": "eslint ./src/**",
     "test": "echo \"Everything looks good\" && exit 0",
     "prepare": "husky install",
-    "generate": "graphql-codegen --config ./src/lib/apollo/codegen.ts"
+    "generate": "graphql-codegen --config ./src/apollo/codegen.ts"
   },
   "prisma": {
-    "schema": "./src/lib/prisma/schema.prisma",
-    "seed": "tsx ./src/lib/prisma/seed.ts"
+    "schema": "./src/prisma/schema.prisma",
+    "seed": "tsx ./src/prisma/seed.ts"
   },
   "dependencies": {
     "@apollo/server": "^4.9.4",
+    "@clerk/clerk-sdk-node": "^4.12.15",
     "@graphql-tools/load-files": "^7.0.0",
     "@prisma/client": "^5.3.1",
     "graphql": "^16.8.1",

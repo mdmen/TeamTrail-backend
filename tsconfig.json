@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
+    "lib": ["esnext"],
     "target": "esnext",
-    "module": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
