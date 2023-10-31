@@ -1,8 +1,20 @@
-import { GraphQLError } from 'graphql';
 import { ApolloServerErrorCode } from '@apollo/server/errors';
-import { Resolvers } from '../_generated';
+import { GraphQLError } from 'graphql';
+import type { Resolvers } from '../_generated';
 
-export const mutationResovers: Resolvers = {
+export const userResolvers: Resolvers = {
+  Query: {
+    me: (_, __, { user }) => user,
+    users: async (_, { workspace }) => {
+      return [
+        {
+          id: 'asd',
+          nickname: 'test' + workspace,
+          email: 'dasd@dasd.ru',
+        },
+      ];
+    },
+  },
   Mutation: {
     async addUser(_, args) {
       if (Math.random() > 0.5) {
@@ -21,4 +33,5 @@ export const mutationResovers: Resolvers = {
       };
     },
   },
+  User: {},
 };

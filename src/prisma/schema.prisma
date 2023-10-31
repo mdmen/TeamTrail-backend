@@ -7,99 +7,106 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator zod {
+  provider         = "zod-prisma-types"
+  output           = "./_generated/zod"
+  useMultipleFiles = false
+}
+
 model User {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  /// @zod.string.min(1).max(320)
   email     String    @unique
+  /// @zod.string.min(1).max(100)
   name      String
-  nickname  String    @unique
+  /// @zod.string.min(1).max(50)
+  username  String    @unique
   image     String?
+  /// @zod.string.min(1).max(20)
+  phone     String?
   location  Location?
 
   @@map("users")
 }
 
-model Workspace {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  code      String   @default(cuid())
-  name      String
-  public    Boolean  @default(false)
+// model Workspace {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   code      String   @default(cuid())
+//   name      String
+//   public    Boolean  @default(false)
 
-  @@map("workspaces")
-}
+//   @@map("workspaces")
+// }
 
-model Task {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  code      String   @default(cuid())
-  index     Int
-  title     String
+// model Task {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   code        String   @default(cuid())
+//   title       String
+//   description String
 
-  @@map("tasks")
-}
+//   @@map("tasks")
+// }
 
-model Issue {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  code      String   @default(cuid())
-  title     String
+// model Issue {
+//   id          String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   code        String   @default(cuid())
+//   title       String
+//   description String
 
-  @@map("issues")
-}
+//   @@map("issues")
+// }
 
-model Board {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  title String
-  code  String
+// model Board {
+//   id    String @id @default(auto()) @map("_id") @db.ObjectId
+//   title String
+//   code  String
 
-  @@map("boards")
-}
+//   @@map("boards")
+// }
 
-model TaskList {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  index Int
+// model Page {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   title     String
+//   code      String   @default(cuid())
 
-  @@map("task_lists")
-}
+//   @@map("pages")
+// }
 
-model Page {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String
-  code      String
+// // Issue/Task
+// model Comment {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   text      String
 
-  @@map("pages")
-}
+//   @@map("comments")
+// }
 
-// Issue/Task
-model Comment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// // Chat
+// model Message {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   text      String
 
-  @@map("comments")
-}
+//   @@map("messages")
+// }
 
-// Chat
-model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("messages")
-}
-
-enum Role {
-  Admin
-  Moderator
-  Member
-}
+// enum Role {
+//   Admin
+//   Moderator
+//   Member
+// }
 
 type Location {
   country String?

@@ -1,5 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import { ApolloContext } from './context';
+import { ApolloContext } from '../context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -42,16 +42,17 @@ export type Mutation = {
 
 export type MutationAddUserArgs = {
   email?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type Query = {
   __typename?: 'Query';
+  me: User;
   users: Array<User>;
 };
 
 export type QueryUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']['input']>;
+  workspace?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type User = {
@@ -62,6 +63,7 @@ export type User = {
   location?: Maybe<Location>;
   name?: Maybe<Scalars['String']['output']>;
   nickname: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -176,7 +178,6 @@ export type DirectiveResolverFn<
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Location: ResolverTypeWrapper<Location>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
@@ -188,7 +189,6 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
-  Int: Scalars['Int']['output'];
   Location: Location;
   Mutation: {};
   Query: {};
@@ -224,6 +224,7 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = ResolversObject<{
+  me?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   users?: Resolver<
     Array<ResolversTypes['User']>,
     ParentType,
@@ -247,6 +248,7 @@ export type UserResolvers<
   >;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   nickname?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 

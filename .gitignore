@@ -14,7 +14,7 @@
 # misc
 .DS_Store
 *.pem
-docker/mongodb/replica.key
+docker/local/mongodb/replica.key
 
 # debug
 npm-debug.log*

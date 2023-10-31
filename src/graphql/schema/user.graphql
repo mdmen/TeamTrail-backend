@@ -1,0 +1,29 @@
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  name: String
+  image: String
+  phone: String
+  location: Location
+}
+
+type Location {
+  country: String
+  city: String
+}
+
+type Query {
+  me: User!
+  user(id: ID): User!
+  users(workspaceId: ID): [User!]!
+}
+
+input AddUserInput {
+  nickname: String!
+  email: String!
+}
+
+type Mutation {
+  addUser(input: AddUserInput!): User
+}

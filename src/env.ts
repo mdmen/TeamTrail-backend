@@ -2,12 +2,12 @@ import z from 'zod';
 
 const schema = z.object({
   NODE_ENV: z.union([z.literal('development'), z.literal('production')]),
-  GRAPHQL_PORT: z.number().min(1).max(65535),
+  SERVER_API_PORT: z.number().min(1).max(65535),
 });
 
 const parsed = schema.safeParse({
   NODE_ENV: process.env.NODE_ENV,
-  GRAPHQL_PORT: Number(process.env.GRAPHQL_PORT),
+  SERVER_API_PORT: Number(process.env.SERVER_API_PORT),
 });
 
 if (!parsed.success) {

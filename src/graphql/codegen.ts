@@ -3,10 +3,10 @@ import { type CodegenConfig } from '@graphql-codegen/cli';
 const config: CodegenConfig = {
   schema: 'src/**/*.graphql',
   generates: {
-    './src/apollo/generated.ts': {
+    './src/graphql/_generated/index.ts': {
       config: {
         useIndexSignature: true,
-        contextType: './context#ApolloContext',
+        contextType: '../context#ApolloContext',
       },
       plugins: ['typescript', 'typescript-resolvers'],
     },
