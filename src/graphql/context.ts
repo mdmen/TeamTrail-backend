@@ -1,6 +1,6 @@
-import type { PrismaClient, User } from '@prisma/client';
+import type { PrismaClient } from '@prisma/client';
 
 export interface ApolloContext {
-  prisma: PrismaClient;
-  user: User | null;
+  db: PrismaClient;
+  userId: string;
 }

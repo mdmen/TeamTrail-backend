@@ -15,15 +15,18 @@ type Location {
 
 type Query {
   me: User!
-  user(id: ID): User!
-  users(workspaceId: ID): [User!]!
+  user(id: ID!): User!
 }
 
-input AddUserInput {
-  nickname: String!
+input CreateUserInput {
+  id: ID!
+  username: String!
   email: String!
+  name: String
+  image: String
+  phone: String
 }
 
 type Mutation {
-  addUser(input: AddUserInput!): User
+  createUser(input: CreateUserInput!): User
 }

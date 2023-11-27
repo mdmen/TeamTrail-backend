@@ -14,10 +14,10 @@ export const UserScalarFieldEnumSchema = z.enum([
   'createdAt',
   'updatedAt',
   'email',
-  'name',
   'username',
-  'image',
+  'name',
   'phone',
+  'image',
 ]);
 
 export const SortOrderSchema = z.enum(['asc', 'desc']);
@@ -35,11 +35,25 @@ export const UserSchema = z.object({
   id: z.string(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  email: z.string().min(1).max(320),
-  name: z.string().min(1).max(100),
-  username: z.string().min(1).max(50),
+  /**
+   * ;
+   */
+  email: z.string().email({ message: 'Invalid email address' }),
+  username: z
+    .string()
+    .min(3, { message: 'Username must be at least 3 characters long' })
+    .max(50, { message: 'Username must be up to 50 characters long' }),
+  name: z
+    .string()
+    .min(1, { message: 'Name must be at least 1 character' })
+    .max(100, { message: 'Name must be up to 100 characters long' })
+    .nullable(),
+  phone: z
+    .string()
+    .min(3, { message: 'Phone must be at least 3 character' })
+    .max(30, { message: 'Phone must be up to 30 characters long' })
+    .nullable(),
   image: z.string().nullable(),
-  phone: z.string().min(1).max(20).nullable(),
 });
 
 export type User = z.infer<typeof UserSchema>;
@@ -85,10 +99,10 @@ export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z
     createdAt: z.boolean().optional(),
     updatedAt: z.boolean().optional(),
     email: z.boolean().optional(),
-    name: z.boolean().optional(),
     username: z.boolean().optional(),
-    image: z.boolean().optional(),
+    name: z.boolean().optional(),
     phone: z.boolean().optional(),
+    image: z.boolean().optional(),
     location: z
       .union([z.boolean(), z.lazy(() => LocationArgsSchema)])
       .optional(),
@@ -141,15 +155,18 @@ export const UserWhereInputSchema: z.ZodType<Prisma.UserWhereInput> = z
       .union([z.lazy(() => DateTimeFilterSchema), z.coerce.date()])
       .optional(),
     email: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
-    name: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
     username: z
       .union([z.lazy(() => StringFilterSchema), z.string()])
       .optional(),
-    image: z
+    name: z
       .union([z.lazy(() => StringNullableFilterSchema), z.string()])
       .optional()
       .nullable(),
     phone: z
+      .union([z.lazy(() => StringNullableFilterSchema), z.string()])
+      .optional()
+      .nullable(),
+    image: z
       .union([z.lazy(() => StringNullableFilterSchema), z.string()])
       .optional()
       .nullable(),
@@ -170,10 +187,10 @@ export const UserOrderByWithRelationInputSchema: z.ZodType<Prisma.UserOrderByWit
       createdAt: z.lazy(() => SortOrderSchema).optional(),
       updatedAt: z.lazy(() => SortOrderSchema).optional(),
       email: z.lazy(() => SortOrderSchema).optional(),
-      name: z.lazy(() => SortOrderSchema).optional(),
       username: z.lazy(() => SortOrderSchema).optional(),
-      image: z.lazy(() => SortOrderSchema).optional(),
+      name: z.lazy(() => SortOrderSchema).optional(),
       phone: z.lazy(() => SortOrderSchema).optional(),
+      image: z.lazy(() => SortOrderSchema).optional(),
       location: z.lazy(() => LocationOrderByInputSchema).optional(),
     })
     .strict();
@@ -183,37 +200,56 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
     .union([
       z.object({
         id: z.string(),
-        email: z.string().min(1).max(320),
-        username: z.string().min(1).max(50),
+        email: z.string().email({ message: 'Invalid email address' }),
+        username: z
+          .string()
+          .min(3, { message: 'Username must be at least 3 characters long' })
+          .max(50, { message: 'Username must be up to 50 characters long' }),
       }),
       z.object({
         id: z.string(),
-        email: z.string().min(1).max(320),
+        email: z.string().email({ message: 'Invalid email address' }),
       }),
       z.object({
         id: z.string(),
-        username: z.string().min(1).max(50),
+        username: z
+          .string()
+          .min(3, { message: 'Username must be at least 3 characters long' })
+          .max(50, { message: 'Username must be up to 50 characters long' }),
       }),
       z.object({
         id: z.string(),
       }),
       z.object({
-        email: z.string().min(1).max(320),
-        username: z.string().min(1).max(50),
+        email: z.string().email({ message: 'Invalid email address' }),
+        username: z
+          .string()
+          .min(3, { message: 'Username must be at least 3 characters long' })
+          .max(50, { message: 'Username must be up to 50 characters long' }),
       }),
       z.object({
-        email: z.string().min(1).max(320),
+        email: z.string().email({ message: 'Invalid email address' }),
       }),
       z.object({
-        username: z.string().min(1).max(50),
+        username: z
+          .string()
+          .min(3, { message: 'Username must be at least 3 characters long' })
+          .max(50, { message: 'Username must be up to 50 characters long' }),
       }),
     ])
     .and(
       z
         .object({
           id: z.string().optional(),
-          email: z.string().min(1).max(320).optional(),
-          username: z.string().min(1).max(50).optional(),
+          email: z
+            .string()
+            .email({ message: 'Invalid email address' })
+            .optional(),
+          username: z
+            .string()
+            .min(3, { message: 'Username must be at least 3 characters long' })
+            .max(50, { message: 'Username must be up to 50 characters long' })
+            .optional(),
           AND: z
             .union([
               z.lazy(() => UserWhereInputSchema),
@@ -238,19 +274,28 @@ export const UserWhereUniqueInputSchema: z.ZodType<Prisma.UserWhereUniqueInput> 
             .optional(),
           name: z
             .union([
-              z.lazy(() => StringFilterSchema),
-              z.string().min(1).max(100),
+              z.lazy(() => StringNullableFilterSchema),
+              z
+                .string()
+                .min(1, { message: 'Name must be at least 1 character' })
+                .max(100, {
+                  message: 'Name must be up to 100 characters long',
+                }),
             ])
-            .optional(),
-          image: z
-            .union([z.lazy(() => StringNullableFilterSchema), z.string()])
             .optional()
             .nullable(),
           phone: z
             .union([
               z.lazy(() => StringNullableFilterSchema),
-              z.string().min(1).max(20),
+              z
+                .string()
+                .min(3, { message: 'Phone must be at least 3 character' })
+                .max(30, { message: 'Phone must be up to 30 characters long' }),
             ])
+            .optional()
+            .nullable(),
+          image: z
+            .union([z.lazy(() => StringNullableFilterSchema), z.string()])
             .optional()
             .nullable(),
           location: z
@@ -271,10 +316,10 @@ export const UserOrderByWithAggregationInputSchema: z.ZodType<Prisma.UserOrderBy
       createdAt: z.lazy(() => SortOrderSchema).optional(),
       updatedAt: z.lazy(() => SortOrderSchema).optional(),
       email: z.lazy(() => SortOrderSchema).optional(),
-      name: z.lazy(() => SortOrderSchema).optional(),
       username: z.lazy(() => SortOrderSchema).optional(),
-      image: z.lazy(() => SortOrderSchema).optional(),
+      name: z.lazy(() => SortOrderSchema).optional(),
       phone: z.lazy(() => SortOrderSchema).optional(),
+      image: z.lazy(() => SortOrderSchema).optional(),
       _count: z.lazy(() => UserCountOrderByAggregateInputSchema).optional(),
       _max: z.lazy(() => UserMaxOrderByAggregateInputSchema).optional(),
       _min: z.lazy(() => UserMinOrderByAggregateInputSchema).optional(),
@@ -318,13 +363,10 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
       email: z
         .union([z.lazy(() => StringWithAggregatesFilterSchema), z.string()])
         .optional(),
-      name: z
-        .union([z.lazy(() => StringWithAggregatesFilterSchema), z.string()])
-        .optional(),
       username: z
         .union([z.lazy(() => StringWithAggregatesFilterSchema), z.string()])
         .optional(),
-      image: z
+      name: z
         .union([
           z.lazy(() => StringNullableWithAggregatesFilterSchema),
           z.string(),
@@ -338,19 +380,39 @@ export const UserScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.UserScal
         ])
         .optional()
         .nullable(),
+      image: z
+        .union([
+          z.lazy(() => StringNullableWithAggregatesFilterSchema),
+          z.string(),
+        ])
+        .optional()
+        .nullable(),
     })
     .strict();
 
 export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z
   .object({
-    id: z.string().optional(),
+    id: z.string(),
     createdAt: z.coerce.date().optional(),
     updatedAt: z.coerce.date().optional(),
-    email: z.string().min(1).max(320),
-    name: z.string().min(1).max(100),
-    username: z.string().min(1).max(50),
+    email: z.string().email({ message: 'Invalid email address' }),
+    username: z
+      .string()
+      .min(3, { message: 'Username must be at least 3 characters long' })
+      .max(50, { message: 'Username must be up to 50 characters long' }),
+    name: z
+      .string()
+      .min(1, { message: 'Name must be at least 1 character' })
+      .max(100, { message: 'Name must be up to 100 characters long' })
+      .optional()
+      .nullable(),
+    phone: z
+      .string()
+      .min(3, { message: 'Phone must be at least 3 character' })
+      .max(30, { message: 'Phone must be up to 30 characters long' })
+      .optional()
+      .nullable(),
     image: z.string().optional().nullable(),
-    phone: z.string().min(1).max(20).optional().nullable(),
     location: z
       .union([
         z.lazy(() => LocationNullableCreateEnvelopeInputSchema),
@@ -364,14 +426,27 @@ export const UserCreateInputSchema: z.ZodType<Prisma.UserCreateInput> = z
 export const UserUncheckedCreateInputSchema: z.ZodType<Prisma.UserUncheckedCreateInput> =
   z
     .object({
-      id: z.string().optional(),
+      id: z.string(),
       createdAt: z.coerce.date().optional(),
       updatedAt: z.coerce.date().optional(),
-      email: z.string().min(1).max(320),
-      name: z.string().min(1).max(100),
-      username: z.string().min(1).max(50),
+      email: z.string().email({ message: 'Invalid email address' }),
+      username: z
+        .string()
+        .min(3, { message: 'Username must be at least 3 characters long' })
+        .max(50, { message: 'Username must be up to 50 characters long' }),
+      name: z
+        .string()
+        .min(1, { message: 'Name must be at least 1 character' })
+        .max(100, { message: 'Name must be up to 100 characters long' })
+        .optional()
+        .nullable(),
+      phone: z
+        .string()
+        .min(3, { message: 'Phone must be at least 3 character' })
+        .max(30, { message: 'Phone must be up to 30 characters long' })
+        .optional()
+        .nullable(),
       image: z.string().optional().nullable(),
-      phone: z.string().min(1).max(20).optional().nullable(),
       location: z
         .union([
           z.lazy(() => LocationNullableCreateEnvelopeInputSchema),
@@ -398,32 +473,42 @@ export const UserUpdateInputSchema: z.ZodType<Prisma.UserUpdateInput> = z
       .optional(),
     email: z
       .union([
-        z.string().min(1).max(320),
-        z.lazy(() => StringFieldUpdateOperationsInputSchema),
-      ])
-      .optional(),
-    name: z
-      .union([
-        z.string().min(1).max(100),
+        z.string().email({ message: 'Invalid email address' }),
         z.lazy(() => StringFieldUpdateOperationsInputSchema),
       ])
       .optional(),
     username: z
       .union([
-        z.string().min(1).max(50),
+        z
+          .string()
+          .min(3, { message: 'Username must be at least 3 characters long' })
+          .max(50, { message: 'Username must be up to 50 characters long' }),
         z.lazy(() => StringFieldUpdateOperationsInputSchema),
       ])
       .optional(),
-    image: z
+    name: z
       .union([
-        z.string(),
+        z
+          .string()
+          .min(1, { message: 'Name must be at least 1 character' })
+          .max(100, { message: 'Name must be up to 100 characters long' }),
         z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
       ])
       .optional()
       .nullable(),
     phone: z
       .union([
-        z.string().min(1).max(20),
+        z
+          .string()
+          .min(3, { message: 'Phone must be at least 3 character' })
+          .max(30, { message: 'Phone must be up to 30 characters long' }),
+        z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
+      ])
+      .optional()
+      .nullable(),
+    image: z
+      .union([
+        z.string(),
         z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
       ])
       .optional()
@@ -455,32 +540,42 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
         .optional(),
       email: z
         .union([
-          z.string().min(1).max(320),
-          z.lazy(() => StringFieldUpdateOperationsInputSchema),
-        ])
-        .optional(),
-      name: z
-        .union([
-          z.string().min(1).max(100),
+          z.string().email({ message: 'Invalid email address' }),
           z.lazy(() => StringFieldUpdateOperationsInputSchema),
         ])
         .optional(),
       username: z
         .union([
-          z.string().min(1).max(50),
+          z
+            .string()
+            .min(3, { message: 'Username must be at least 3 characters long' })
+            .max(50, { message: 'Username must be up to 50 characters long' }),
           z.lazy(() => StringFieldUpdateOperationsInputSchema),
         ])
         .optional(),
-      image: z
+      name: z
         .union([
-          z.string(),
+          z
+            .string()
+            .min(1, { message: 'Name must be at least 1 character' })
+            .max(100, { message: 'Name must be up to 100 characters long' }),
           z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
         ])
         .optional()
         .nullable(),
       phone: z
         .union([
-          z.string().min(1).max(20),
+          z
+            .string()
+            .min(3, { message: 'Phone must be at least 3 character' })
+            .max(30, { message: 'Phone must be up to 30 characters long' }),
+          z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
+        ])
+        .optional()
+        .nullable(),
+      image: z
+        .union([
+          z.string(),
           z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
         ])
         .optional()
@@ -498,14 +593,27 @@ export const UserUncheckedUpdateInputSchema: z.ZodType<Prisma.UserUncheckedUpdat
 export const UserCreateManyInputSchema: z.ZodType<Prisma.UserCreateManyInput> =
   z
     .object({
-      id: z.string().optional(),
+      id: z.string(),
       createdAt: z.coerce.date().optional(),
       updatedAt: z.coerce.date().optional(),
-      email: z.string().min(1).max(320),
-      name: z.string().min(1).max(100),
-      username: z.string().min(1).max(50),
+      email: z.string().email({ message: 'Invalid email address' }),
+      username: z
+        .string()
+        .min(3, { message: 'Username must be at least 3 characters long' })
+        .max(50, { message: 'Username must be up to 50 characters long' }),
+      name: z
+        .string()
+        .min(1, { message: 'Name must be at least 1 character' })
+        .max(100, { message: 'Name must be up to 100 characters long' })
+        .optional()
+        .nullable(),
+      phone: z
+        .string()
+        .min(3, { message: 'Phone must be at least 3 character' })
+        .max(30, { message: 'Phone must be up to 30 characters long' })
+        .optional()
+        .nullable(),
       image: z.string().optional().nullable(),
-      phone: z.string().min(1).max(20).optional().nullable(),
       location: z
         .union([
           z.lazy(() => LocationNullableCreateEnvelopeInputSchema),
@@ -533,32 +641,42 @@ export const UserUpdateManyMutationInputSchema: z.ZodType<Prisma.UserUpdateManyM
         .optional(),
       email: z
         .union([
-          z.string().min(1).max(320),
-          z.lazy(() => StringFieldUpdateOperationsInputSchema),
-        ])
-        .optional(),
-      name: z
-        .union([
-          z.string().min(1).max(100),
+          z.string().email({ message: 'Invalid email address' }),
           z.lazy(() => StringFieldUpdateOperationsInputSchema),
         ])
         .optional(),
       username: z
         .union([
-          z.string().min(1).max(50),
+          z
+            .string()
+            .min(3, { message: 'Username must be at least 3 characters long' })
+            .max(50, { message: 'Username must be up to 50 characters long' }),
           z.lazy(() => StringFieldUpdateOperationsInputSchema),
         ])
         .optional(),
-      image: z
+      name: z
         .union([
-          z.string(),
+          z
+            .string()
+            .min(1, { message: 'Name must be at least 1 character' })
+            .max(100, { message: 'Name must be up to 100 characters long' }),
           z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
         ])
         .optional()
         .nullable(),
       phone: z
         .union([
-          z.string().min(1).max(20),
+          z
+            .string()
+            .min(3, { message: 'Phone must be at least 3 character' })
+            .max(30, { message: 'Phone must be up to 30 characters long' }),
+          z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
+        ])
+        .optional()
+        .nullable(),
+      image: z
+        .union([
+          z.string(),
           z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
         ])
         .optional()
@@ -590,32 +708,42 @@ export const UserUncheckedUpdateManyInputSchema: z.ZodType<Prisma.UserUncheckedU
         .optional(),
       email: z
         .union([
-          z.string().min(1).max(320),
-          z.lazy(() => StringFieldUpdateOperationsInputSchema),
-        ])
-        .optional(),
-      name: z
-        .union([
-          z.string().min(1).max(100),
+          z.string().email({ message: 'Invalid email address' }),
           z.lazy(() => StringFieldUpdateOperationsInputSchema),
         ])
         .optional(),
       username: z
         .union([
-          z.string().min(1).max(50),
+          z
+            .string()
+            .min(3, { message: 'Username must be at least 3 characters long' })
+            .max(50, { message: 'Username must be up to 50 characters long' }),
           z.lazy(() => StringFieldUpdateOperationsInputSchema),
         ])
         .optional(),
-      image: z
+      name: z
         .union([
-          z.string(),
+          z
+            .string()
+            .min(1, { message: 'Name must be at least 1 character' })
+            .max(100, { message: 'Name must be up to 100 characters long' }),
           z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
         ])
         .optional()
         .nullable(),
       phone: z
         .union([
-          z.string().min(1).max(20),
+          z
+            .string()
+            .min(3, { message: 'Phone must be at least 3 character' })
+            .max(30, { message: 'Phone must be up to 30 characters long' }),
+          z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
+        ])
+        .optional()
+        .nullable(),
+      image: z
+        .union([
+          z.string(),
           z.lazy(() => NullableStringFieldUpdateOperationsInputSchema),
         ])
         .optional()
@@ -728,10 +856,10 @@ export const UserCountOrderByAggregateInputSchema: z.ZodType<Prisma.UserCountOrd
       createdAt: z.lazy(() => SortOrderSchema).optional(),
       updatedAt: z.lazy(() => SortOrderSchema).optional(),
       email: z.lazy(() => SortOrderSchema).optional(),
-      name: z.lazy(() => SortOrderSchema).optional(),
       username: z.lazy(() => SortOrderSchema).optional(),
-      image: z.lazy(() => SortOrderSchema).optional(),
+      name: z.lazy(() => SortOrderSchema).optional(),
       phone: z.lazy(() => SortOrderSchema).optional(),
+      image: z.lazy(() => SortOrderSchema).optional(),
     })
     .strict();
 
@@ -742,10 +870,10 @@ export const UserMaxOrderByAggregateInputSchema: z.ZodType<Prisma.UserMaxOrderBy
       createdAt: z.lazy(() => SortOrderSchema).optional(),
       updatedAt: z.lazy(() => SortOrderSchema).optional(),
       email: z.lazy(() => SortOrderSchema).optional(),
-      name: z.lazy(() => SortOrderSchema).optional(),
       username: z.lazy(() => SortOrderSchema).optional(),
-      image: z.lazy(() => SortOrderSchema).optional(),
+      name: z.lazy(() => SortOrderSchema).optional(),
       phone: z.lazy(() => SortOrderSchema).optional(),
+      image: z.lazy(() => SortOrderSchema).optional(),
     })
     .strict();
 
@@ -756,10 +884,10 @@ export const UserMinOrderByAggregateInputSchema: z.ZodType<Prisma.UserMinOrderBy
       createdAt: z.lazy(() => SortOrderSchema).optional(),
       updatedAt: z.lazy(() => SortOrderSchema).optional(),
       email: z.lazy(() => SortOrderSchema).optional(),
-      name: z.lazy(() => SortOrderSchema).optional(),
       username: z.lazy(() => SortOrderSchema).optional(),
-      image: z.lazy(() => SortOrderSchema).optional(),
+      name: z.lazy(() => SortOrderSchema).optional(),
       phone: z.lazy(() => SortOrderSchema).optional(),
+      image: z.lazy(() => SortOrderSchema).optional(),
     })
     .strict();
 

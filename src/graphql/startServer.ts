@@ -1,7 +1,6 @@
 import { loadFilesSync } from '@graphql-tools/load-files';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import express from 'express';
 import cors from 'cors';
@@ -9,7 +8,9 @@ import http from 'http';
 import { resolvers } from './resolvers';
 import { prisma } from '../prisma/client';
 import { type ApolloContext } from './context';
-import { GraphQLNotAuthenticatedError } from './errors';
+// import { GraphQLNotAuthenticatedError } from './errors';
+// import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node';
+import { isProduction } from '../helpers/utils';
 
 export async function startServer() {
   const app = express();
@@ -30,39 +31,31 @@ export async function startServer() {
       origin: [
         'https://sandbox.embed.apollographql.com',
         'https://studio.apollographql.com',
+        isProduction && (process.env.WEB_SITE_URL as string),
       ],
       credentials: true,
     }),
-    ClerkExpressWithAuth(),
+    // ClerkExpressWithAuth(),
     express.json(),
     expressMiddleware(apolloServer, {
-      context: async ({ req }) => {
-        const { auth } = req;
+      context: async () => {
+        // const userId = req?.auth?.userId;
 
-        if (!auth?.userId) {
-          throw new GraphQLNotAuthenticatedError();
-        }
+        // if (!userId) {
+        //   throw new GraphQLNotAuthenticatedError();
+        // }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            id: auth.userId,
-          },
-        });
-
-        return { prisma, user };
+        return { db: prisma, userId: '' };
       },
     }),
   );
 
+  const port = Number(process.env.SERVER_API_PORT);
+  const path = process.env.SERVER_API_PATH;
+
   await new Promise<void>((resolve) =>
-    httpServer.listen(
-      {
-        port: Number(process.env.SERVER_API_PORT),
-        path: process.env.SERVER_API_PATH,
-      },
-      resolve,
-    ),
+    httpServer.listen({ port, path }, resolve),
   );
 
-  console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+  console.log(`🚀 Server ready at http://localhost:${port}${path}`);
 }

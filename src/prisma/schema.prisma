@@ -14,18 +14,18 @@ generator zod {
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @map("_id")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  /// @zod.string.min(1).max(320)
+  /// @zod.string.email({ message: "Invalid email address" });
   email     String    @unique
-  /// @zod.string.min(1).max(100)
-  name      String
-  /// @zod.string.min(1).max(50)
+  /// @zod.string.min(3, { message: "Username must be at least 3 characters long" }).max(50, { message: "Username must be up to 50 characters long" })
   username  String    @unique
-  image     String?
-  /// @zod.string.min(1).max(20)
+  /// @zod.string.min(1, { message: "Name must be at least 1 character" }).max(100, { message: "Name must be up to 100 characters long" })
+  name      String?
+  /// @zod.string.min(3, { message: "Phone must be at least 3 character" }).max(30, { message: "Phone must be up to 30 characters long" })
   phone     String?
+  image     String?
   location  Location?
 
   @@map("users")

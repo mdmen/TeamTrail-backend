@@ -1,37 +1,35 @@
-import { ApolloServerErrorCode } from '@apollo/server/errors';
-import { GraphQLError } from 'graphql';
 import type { Resolvers } from '../_generated';
+import { GraphQLNotFoundError } from '../errors';
+import { UserCreateInputSchema } from '../../prisma/_generated/zod';
+import { handleGraphQLError } from '../../helpers/errors';
 
 export const userResolvers: Resolvers = {
   Query: {
-    me: (_, __, { user }) => user,
-    users: async (_, { workspace }) => {
-      return [
-        {
-          id: 'asd',
-          nickname: 'test' + workspace,
-          email: 'dasd@dasd.ru',
+    me: async (_, __, { userId, db }) => {
+      const me = await db.user.findUnique({
+        where: {
+          id: userId,
         },
-      ];
+      });
+
+      if (!me) {
+        throw new GraphQLNotFoundError();
+      }
+
+      return me;
     },
   },
   Mutation: {
-    async addUser(_, args) {
-      if (Math.random() > 0.5) {
-        throw new GraphQLError('Name must be unique', {
-          extensions: {
-            code: ApolloServerErrorCode.BAD_USER_INPUT,
-            invalidArgs: args,
-          },
+    async createUser(_, { input }, { db }) {
+      try {
+        const user = await db.user.create({
+          data: UserCreateInputSchema.parse(input),
         });
-      }
 
-      return {
-        id: '1',
-        email: '0dH0K@example.com',
-        nickname: 'john',
-      };
+        return user;
+      } catch (err) {
+        handleGraphQLError(err);
+      }
     },
   },
-  User: {},
 };
